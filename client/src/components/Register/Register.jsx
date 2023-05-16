@@ -8,6 +8,7 @@ import {
 	StyledInputContainer,
 	StyledRegister
 } from './styles';
+import CreateProfile from '../createProfile/CreateProfile';
 
 const Register = ({ setContent }) => {
 	const [correctPassword, setCorrectPassword] = useState();
@@ -17,7 +18,7 @@ const Register = ({ setContent }) => {
 		password: '',
 		confirmPassword: ''
 	});
-	const navigate = useNavigate();
+
 	return (
 		<StyledRegister>
 			<StyledCrossButton
@@ -27,9 +28,7 @@ const Register = ({ setContent }) => {
 			/>
 			<h2>Register</h2>
 			<form
-				onSubmit={e =>
-					handleSubmit(e, register, setCorrectPassword, setError, navigate)
-				}
+				onSubmit={e => handleSubmit(e, register, setCorrectPassword, setError)}
 			>
 				<StyledInputContainer>
 					<label htmlFor=''>Email</label>
@@ -68,7 +67,11 @@ const Register = ({ setContent }) => {
 				)}
 				{error && <p>{error.message}</p>}
 
-				<StyledButton>Confirm</StyledButton>
+				<StyledButton
+					onClick={() => setContent(<CreateProfile setContent={setContent} />)}
+				>
+					Confirm
+				</StyledButton>
 			</form>
 		</StyledRegister>
 	);
@@ -77,13 +80,7 @@ const handleChange = (setRegister, register, key, value) => {
 	setRegister({ ...register, [key]: value });
 };
 
-const handleSubmit = async (
-	e,
-	register,
-	setCorrectPassword,
-	setError,
-	navigate
-) => {
+const handleSubmit = async (e, register, setCorrectPassword, setError) => {
 	e.preventDefault();
 	const { email, password, confirmPassword } = register;
 	if (password === confirmPassword) {
@@ -95,7 +92,6 @@ const handleSubmit = async (
 		}
 	} else setCorrectPassword(false);
 	e.target.reset();
-	navigate('/');
 };
 
 export default Register;

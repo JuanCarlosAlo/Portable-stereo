@@ -1,35 +1,39 @@
 import { useContext, useState } from 'react';
-import { StyledHeader, StyledHeaderLogo, StyledMenu } from './styles';
+import { StyledHeader, StyledHeaderLogo, StyledLi, StyledMenu } from './styles';
 import { AuthContext } from '../../context/Auth.context';
 import Modal from '../modal/Modal';
 import LogIn from '../LogIn/LogIn';
 import Register from '../Register/Register';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
-	const { currentUser } = useContext(AuthContext);
+	const { currentUser, loading } = useContext(AuthContext);
 	const [content, setContent] = useState(null);
+
+	if (loading) return <h1>Loading...</h1>;
+
 	return (
 		<StyledHeader>
-			<a href='/'>
+			<Link to='/'>
 				<StyledHeaderLogo>LOGO</StyledHeaderLogo>
-			</a>
+			</Link>
 			<div>
 				<nav>
 					<StyledMenu>
 						{!currentUser ? (
 							<>
-								<li
+								<StyledLi
 									onClick={() =>
 										setContent(<Register setContent={setContent} />)
 									}
 								>
 									Register
-								</li>
-								<li
+								</StyledLi>
+								<StyledLi
 									onClick={() => setContent(<LogIn setContent={setContent} />)}
 								>
 									Log In
-								</li>
+								</StyledLi>
 							</>
 						) : (
 							<>

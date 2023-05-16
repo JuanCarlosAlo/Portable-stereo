@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { COLORS } from '../../constants/colors';
 
 const StyledHeader = styled.header`
 	display: flex;
@@ -13,9 +14,14 @@ const StyledHeaderLogo = styled.h1`
 	font-size: 1rem;
 `;
 
+const StyledLi = styled.li`
+	color: ${COLORS.MAIN};
+	cursor: pointer;
+`;
+
 const StyledMenu = styled.ul`
 	display: flex;
 	gap: 2rem;
 `;
 
-export { StyledHeader, StyledHeaderLogo, StyledMenu };
+export { StyledHeader, StyledHeaderLogo, StyledMenu, StyledLi };

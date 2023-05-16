@@ -7,8 +7,8 @@ import { ARTICLE_TITLES } from '../../constants/articleTitles';
 import { StyledHome } from './styles';
 
 const Home = () => {
-	const { currentUser } = useContext(AuthContext);
-	if (!currentUser) {
+	const { currentUser, loading } = useContext(AuthContext);
+	if (!currentUser && !loading) {
 		return (
 			<StyledHome>
 				<Banner />

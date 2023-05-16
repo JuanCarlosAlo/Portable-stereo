@@ -13,6 +13,7 @@ import Player from '../../components/player/Player';
 
 const Profile = () => {
 	const { currentUser } = useContext(AuthContext);
+
 	const navigate = useNavigate();
 
 	return (

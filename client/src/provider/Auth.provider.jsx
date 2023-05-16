@@ -4,6 +4,7 @@ import { auth } from '../config/firebase.config';
 
 export const AuthProvider = ({ children }) => {
 	const [currentUser, setCurrentUser] = useState(null);
+	const [loading, setLoading] = useState(true);
 	useEffect(() => {
 		const unsuscribe = auth.onAuthStateChanged(user => {
 			if (user) {
@@ -15,11 +16,12 @@ export const AuthProvider = ({ children }) => {
 				console.log('Usuario no autenticado');
 				setCurrentUser(null);
 			}
+			setLoading(false);
 		});
 		return () => unsuscribe();
 	}, []);
 	return (
-		<AuthContext.Provider value={{ currentUser, setCurrentUser }}>
+		<AuthContext.Provider value={{ currentUser, setCurrentUser, loading }}>
 			{children}
 		</AuthContext.Provider>
 	);
