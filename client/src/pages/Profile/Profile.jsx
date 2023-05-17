@@ -28,6 +28,7 @@ const Profile = () => {
 					</div>
 				</StyledMainProfileContentContainer>
 				<div>
+					<p>{currentUser.email}</p>
 					<p>Bio</p>
 					<p>
 						Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odit quod
@@ -36,7 +37,7 @@ const Profile = () => {
 						consectetur tempore non reiciendis.
 					</p>
 				</div>
-				{/* <p>{currentUser.email}</p> */}
+
 				<div>
 					<StyledButton onClick={e => handleSubmit(navigate)}>
 						Log Out

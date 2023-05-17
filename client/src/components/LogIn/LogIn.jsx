@@ -13,6 +13,8 @@ import {
 	StyledInputContainer,
 	StyledSignIn
 } from './styles';
+import { regexpEmail } from '../../constants/regex';
+import MainColorButton from '../main-color-button/MainColorButton';
 
 const LogIn = ({ setContent }) => {
 	const [error, setError] = useState();
@@ -54,7 +56,7 @@ const LogIn = ({ setContent }) => {
 					/>
 				</StyledInputContainer>
 				{error && <p>{error}</p>}
-				<StyledButton>Log In</StyledButton>
+				<MainColorButton width={'250px'} text={'Log In'} />
 			</form>
 		</StyledSignIn>
 	);
@@ -67,13 +69,17 @@ const handleChange = (setSignIn, signIn, key, value) => {
 const handleSubmit = async (e, signIn, setError, setContent) => {
 	e.preventDefault();
 	const { email, password } = signIn;
-	try {
-		await signInWithEmailAndPassword(auth, email, password);
-		setContent(null);
-	} catch (error) {
-		setError('Invalid email');
+	if (regexpEmail.test(email)) {
+		try {
+			await signInWithEmailAndPassword(auth, email, password);
+			setContent(null);
+		} catch (error) {
+			setError('Invalid email');
+		}
+		e.target.reset();
+	} else {
+		setError('Please use a valid email');
 	}
-	e.target.reset();
 };
 
 const loginWithGoogle = async () => {

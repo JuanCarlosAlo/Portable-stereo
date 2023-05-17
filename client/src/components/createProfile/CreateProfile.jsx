@@ -2,32 +2,43 @@ import { useState } from 'react';
 import { StyledCrossButton, StyledProfile } from './styles';
 import UploadPhoto from '../upload-photo/UploadPhoto';
 import { IMAGES } from '../../constants/imagesUrls';
+import InputContainer from '../inputContainer/InputContainer';
+import MainColorButton from '../main-color-button/MainColorButton';
 
-const CreateProfile = ({ setContent }) => {
+const CreateProfile = ({ setContent, userName }) => {
 	const [profile, setProfile] = useState({
-		userName: '',
+		userName,
 		bio: '',
-		profileImg: IMAGES.DEFAULT_PROFILE
+		profileImg: IMAGES.DEFAULT_PROFILE,
+		mixtapes: [],
+		selfLikes: [],
+		othersLikes: 0,
+		selfFollows: [],
+		othersFollows: [],
+		tracksUploads: [],
+		albumsUploads: []
 	});
 
 	return (
 		<StyledProfile>
-			<StyledCrossButton src='/images/cross.svg' />
+			<StyledCrossButton
+				onClick={() => setContent(null)}
+				src='/images/cross.svg'
+			/>
 			<h2>Profile</h2>
 			<div>
 				<img src={profile.profileImg} alt='' />
 				<UploadPhoto profile={profile} setProfile={setProfile} />
 			</div>
 			<form onSubmit={e => handleSubmit(e)}>
-				<div>
-					<label htmlFor=''>User Name</label>
-					<input type='text' />
-				</div>
-				<div>
-					<label htmlFor=''>Biography</label>
-					<input type='textbox' />
-				</div>
-				<button>Accept</button>
+				<InputContainer
+					labelText={'Bio'}
+					setValue={setProfile}
+					value={profile}
+					keyValue={'bio'}
+					type={'textbox'}
+				/>
+				<MainColorButton width={'250px'} text={'Accept'} />
 			</form>
 		</StyledProfile>
 	);

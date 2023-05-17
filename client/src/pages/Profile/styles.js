@@ -40,6 +40,7 @@ const StyledButton = styled.button`
 	border-radius: 0.5rem;
 	color: ${COLORS.WHITE};
 	background-color: transparent;
+	cursor: pointer;
 	&:hover {
 		background-color: ${COLORS.WHITE};
 		color: ${COLORS.BLACK};

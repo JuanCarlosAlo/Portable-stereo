@@ -8,6 +8,7 @@ import { StyledHome } from './styles';
 
 const Home = () => {
 	const { currentUser, loading } = useContext(AuthContext);
+
 	if (!currentUser && !loading) {
 		return (
 			<StyledHome>
