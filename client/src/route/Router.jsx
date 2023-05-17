@@ -4,12 +4,8 @@ import Home from '../pages/Home/Home';
 
 import Profile from '../pages/Profile/Profile';
 import ProtectedRoute from './ProtectedRoute';
-import { useContext } from 'react';
-import { AuthContext } from '../context/Auth.context';
 
 const Router = () => {
-	const { currentUser, loading } = useContext(AuthContext);
-
 	return (
 		<Routes>
 			<Route path='/' element={<Layout />}>

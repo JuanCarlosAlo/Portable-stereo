@@ -7,10 +7,8 @@ const StyledButton = styled.button`
 	gap: 1rem;
 	align-items: center;
 	padding: 0.5rem;
-	width: ${({ width }) => width};
+	width: 250px;
 	margin-bottom: 2rem;
-	margin-right: auto;
-	margin-left: auto;
 	border: 1px solid ${COLORS.MAIN};
 	border-radius: 0.5rem;
 	color: ${COLORS.WHITE};
@@ -22,4 +20,8 @@ const StyledButton = styled.button`
 	}
 `;
 
-export { StyledButton };
+const StyledButtonIcon = styled.img`
+	width: 30px;
+`;
+
+export { StyledButton, StyledButtonIcon };

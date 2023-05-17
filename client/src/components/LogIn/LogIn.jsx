@@ -1,20 +1,12 @@
-import {
-	GoogleAuthProvider,
-	signInWithEmailAndPassword,
-	signInWithPopup
-} from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { auth } from '../../config/firebase.config';
 
-import {
-	StyledButton,
-	StyledButtonIcon,
-	StyledCrossButton,
-	StyledInputContainer,
-	StyledSignIn
-} from './styles';
+import { StyledCrossButton, StyledSignIn } from './styles';
 import { regexpEmail } from '../../constants/regex';
 import MainColorButton from '../main-color-button/MainColorButton';
+import SocialLogin from '../social-logIn/SocialLogin';
+import InputContainer from '../inputContainer/InputContainer';
 
 const LogIn = ({ setContent }) => {
 	const [error, setError] = useState();
@@ -31,39 +23,32 @@ const LogIn = ({ setContent }) => {
 				alt=''
 			/>
 			<h2>Log In</h2>
-			<StyledButton onClick={loginWithGoogle}>
-				Log in with Google
-				<StyledButtonIcon src='/images/google-tile.svg' alt='' />
-			</StyledButton>
 
+			<SocialLogin social={'google'} />
+			<SocialLogin social={'twitter'} />
 			<form onSubmit={e => handleSubmit(e, signIn, setError, setContent)}>
-				<StyledInputContainer>
-					<label htmlFor=''>Email</label>
-					<input
-						onChange={e =>
-							handleChange(setSignIn, signIn, 'email', e.target.value)
-						}
-						type='text'
-					/>
-				</StyledInputContainer>
-				<StyledInputContainer>
-					<label htmlFor=''>Password</label>
-					<input
-						onChange={e =>
-							handleChange(setSignIn, signIn, 'password', e.target.value)
-						}
-						type='password'
-					/>
-				</StyledInputContainer>
+				<InputContainer
+					labelText={'Email'}
+					setValue={setSignIn}
+					value={signIn}
+					keyValue={'email'}
+					type={'text'}
+					stack={true}
+				/>
+				<InputContainer
+					labelText={'Password'}
+					setValue={setSignIn}
+					value={signIn}
+					keyValue={'password'}
+					type={'password'}
+					stack={true}
+				/>
+
 				{error && <p>{error}</p>}
 				<MainColorButton width={'250px'} text={'Log In'} />
 			</form>
 		</StyledSignIn>
 	);
-};
-
-const handleChange = (setSignIn, signIn, key, value) => {
-	setSignIn({ ...signIn, [key]: value });
 };
 
 const handleSubmit = async (e, signIn, setError, setContent) => {
@@ -79,17 +64,6 @@ const handleSubmit = async (e, signIn, setError, setContent) => {
 		e.target.reset();
 	} else {
 		setError('Please use a valid email');
-	}
-};
-
-const loginWithGoogle = async () => {
-	const provider = new GoogleAuthProvider();
-	try {
-		const result = await signInWithPopup(auth, provider);
-		const credential = GoogleAuthProvider.credentialFromResult(result);
-		console.log(credential);
-	} catch (error) {
-		console.log(error);
 	}
 };
 

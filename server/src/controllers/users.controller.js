@@ -44,6 +44,9 @@ controller.createUser = async (req, res) => {
       albumsUploads,
     },
   });
+  await newUser.save();
+
+  res.send("User Register");
 };
 
 module.exports = controller;

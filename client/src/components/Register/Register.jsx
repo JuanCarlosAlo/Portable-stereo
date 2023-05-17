@@ -7,9 +7,11 @@ import { StyledCrossButton, StyledRegister } from './styles';
 import CreateUserName from '../createUserName/CreateUserName';
 import MainColorButton from '../main-color-button/MainColorButton';
 import InputContainer from '../inputContainer/InputContainer';
+import { FIREBASE_ERRORS } from '../../constants/firebaseErrors';
+import SocialLogin from '../social-logIn/SocialLogin';
 
 const Register = ({ setContent }) => {
-	const [error, setError] = useState();
+	const [firebaseError, setFirebaseError] = useState();
 	const [register, setRegister] = useState({
 		email: '',
 		password: '',
@@ -24,7 +26,11 @@ const Register = ({ setContent }) => {
 				alt=''
 			/>
 			<h2>Register</h2>
-			<form onSubmit={e => handleSubmit(e, register, setError, setContent)}>
+			<SocialLogin social={'google'} />
+			<SocialLogin social={'twitter'} />
+			<form
+				onSubmit={e => handleSubmit(e, register, setFirebaseError, setContent)}
+			>
 				<InputContainer
 					labelText={'Email'}
 					setValue={setRegister}
@@ -50,14 +56,19 @@ const Register = ({ setContent }) => {
 					stack={true}
 				/>
 
-				{error && <p>{error}</p>}
+				{firebaseError && (
+					<p>
+						{console.log(FIREBASE_ERRORS, firebaseError)}
+						{FIREBASE_ERRORS[firebaseError].message}
+					</p>
+				)}
 				<MainColorButton text={'Next'} width={'250px'} />
 			</form>
 		</StyledRegister>
 	);
 };
 
-const handleSubmit = async (e, register, setError, setContent) => {
+const handleSubmit = async (e, register, setFirebaseError, setContent) => {
 	e.preventDefault();
 	const { email, password, confirmPassword } = register;
 	console.log(password);
@@ -67,10 +78,9 @@ const handleSubmit = async (e, register, setError, setContent) => {
 			await createUserWithEmailAndPassword(auth, email, password);
 			setContent(<CreateUserName setContent={setContent} />);
 		} catch (err) {
-			setError(err.message);
-			console.log(err.code);
+			setFirebaseError(err.code);
 		}
-	} else setError(`The pasword doesn't match please try again`);
+	} else setFirebaseError(`The pasword doesn't match please try again`);
 
 	e.target.reset();
 };

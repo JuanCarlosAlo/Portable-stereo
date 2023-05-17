@@ -2,8 +2,6 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { storage } from '../../config/firebase.config';
 
-// import { StyledImg } from './styles';
-
 const UploadPhoto = ({ profile, setProfile }) => {
 	return (
 		<>
@@ -13,9 +11,7 @@ const UploadPhoto = ({ profile, setProfile }) => {
 					onChange={e => handleLoadFile(e.target.files[0], setProfile, profile)}
 				/>
 			</form>
-			{/* <button onClick={() => handleDeleteFile(profile, setProfile)}>
-				Delete
-			</button> */}
+
 			{profile.img && <img src={profile.img} alt='' />}
 		</>
 	);
@@ -35,16 +31,5 @@ const handleLoadFile = async (file, setProfile, profile) => {
 		console.log(error);
 	}
 };
-
-// const handleDeleteFile = async (setProfile, profile) => {
-// 	const storageRef = ref(storage, profile.profileImg);
-// 	try {
-// 		await deleteObject(storageRef);
-// 		console.log('File deleted');
-// 		// setProfile({ ...profile, profileImg: DEFAULT_IMG });
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// };
 
 export default UploadPhoto;

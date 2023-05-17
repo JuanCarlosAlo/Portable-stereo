@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { COLORS } from '../../constants/colors';
 
 const StyledSignIn = styled.div`
 	position: relative;
@@ -16,42 +15,5 @@ const StyledCrossButton = styled.img`
 	height: 20px;
 	width: 20px;
 `;
-const StyledButton = styled.button`
-	display: flex;
-	justify-content: center;
-	gap: 1rem;
-	align-items: center;
-	padding: 0.5rem;
-	width: 250px;
-	margin-bottom: 2rem;
-	border: 1px solid ${COLORS.MAIN};
-	border-radius: 0.5rem;
-	color: ${COLORS.WHITE};
-	background-color: transparent;
-	&:hover {
-		background-color: ${COLORS.WHITE};
-		color: ${COLORS.BLACK};
-	}
-`;
-const StyledInputContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	margin-bottom: 1rem;
 
-	@media screen and (min-width: 360px) {
-		flex-direction: row;
-		gap: 1rem;
-	}
-`;
-const StyledButtonIcon = styled.img`
-	width: 30px;
-`;
-
-export {
-	StyledSignIn,
-	StyledCrossButton,
-	StyledButton,
-	StyledInputContainer,
-	StyledButtonIcon
-};
+export { StyledSignIn, StyledCrossButton };

@@ -3,8 +3,8 @@ import { AuthContext } from '../context/Auth.context';
 import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ redirectTo = '/', children }) => {
-	const { currentUser, loading } = useContext(AuthContext);
-	if (loading) return;
+	const { currentUser, loadingFirebase } = useContext(AuthContext);
+	if (loadingFirebase) return;
 	if (!currentUser) return <Navigate to={redirectTo} replace />;
 	return children;
 };
