@@ -3,14 +3,16 @@ const UserModel = require("../schemes/users.scheme");
 
 const controller = {};
 
+controller;
+
 controller.userValidation = async (req, res) => {
   console.log(req.body);
   const alreadyUserName = await UserModel.findOne({
     userName: req.body.userName,
   });
   if (alreadyUserName) {
-    return res.status(409).send("User name already exist");
-  } else res.status(201).send("Username available");
+    return res.status(409).send({ message: "User name already exist" });
+  } else res.status(201).send({ message: "Username available" });
 };
 
 controller.getUsers = async (req, res) => {
@@ -26,6 +28,7 @@ controller.createUser = async (req, res) => {
   console.log(req.body);
 
   const {
+    _id,
     email,
     userName,
     profileImg,
@@ -40,7 +43,7 @@ controller.createUser = async (req, res) => {
   } = req.body;
 
   const newUser = new UserModel({
-    _id: v4(),
+    _id,
     email,
     userName,
     profileImg,

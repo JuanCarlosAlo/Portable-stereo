@@ -10,7 +10,7 @@ import InputContainer from '../inputContainer/InputContainer';
 import { FIREBASE_ERRORS } from '../../constants/firebaseErrors';
 import SocialLogin from '../social-logIn/SocialLogin';
 
-const Register = ({ setContent }) => {
+const Register = ({ setContent, currentUser }) => {
 	const [firebaseError, setFirebaseError] = useState();
 	const [register, setRegister] = useState({
 		email: '',
@@ -29,7 +29,9 @@ const Register = ({ setContent }) => {
 			<SocialLogin social={'google'} />
 			<SocialLogin social={'twitter'} />
 			<form
-				onSubmit={e => handleSubmit(e, register, setFirebaseError, setContent)}
+				onSubmit={e =>
+					handleSubmit(e, register, setFirebaseError, setContent, currentUser)
+				}
 			>
 				<InputContainer
 					labelText={'Email'}
@@ -68,7 +70,13 @@ const Register = ({ setContent }) => {
 	);
 };
 
-const handleSubmit = async (e, register, setFirebaseError, setContent) => {
+const handleSubmit = async (
+	e,
+	register,
+	setFirebaseError,
+	setContent,
+	currentUser
+) => {
 	e.preventDefault();
 	const { email, password, confirmPassword } = register;
 	console.log(password);
@@ -76,7 +84,9 @@ const handleSubmit = async (e, register, setFirebaseError, setContent) => {
 	if (password === confirmPassword) {
 		try {
 			await createUserWithEmailAndPassword(auth, email, password);
-			setContent(<CreateUserName setContent={setContent} />);
+			setContent(
+				<CreateUserName setContent={setContent} currentUser={currentUser} />
+			);
 		} catch (err) {
 			setFirebaseError(err.code);
 		}

@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { StyledHeader, StyledHeaderLogo, StyledLi, StyledMenu } from './styles';
 import { AuthContext } from '../../context/Auth.context';
 import Modal from '../modal/Modal';
-import LogIn from '../LogIn/LogIn';
+import LogIn from '../logIn/LogIn';
 import Register from '../register/Register';
 import { Link } from 'react-router-dom';
 
@@ -24,7 +24,12 @@ const Header = () => {
 							<>
 								<StyledLi
 									onClick={() =>
-										setContent(<Register setContent={setContent} />)
+										setContent(
+											<Register
+												setContent={setContent}
+												currentUser={currentUser}
+											/>
+										)
 									}
 								>
 									Register

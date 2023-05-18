@@ -7,9 +7,8 @@ import { HEADERS } from '../../constants/headers';
 import { METHODS } from '../../constants/methods';
 import { useFetch } from '../../hooks/useFetch';
 
-const CreateUserName = ({ setContent }) => {
-	const { loading, error, setFetchInfo } = useFetch({ url: URLS.ALL });
-	console.log(error);
+const CreateUserName = ({ setContent, currentUser }) => {
+	const { loading, data, setFetchInfo } = useFetch({ url: URLS.ALL });
 	const [userName, setUserName] = useState();
 
 	if (loading) return <h1>Loading</h1>;
@@ -17,7 +16,11 @@ const CreateUserName = ({ setContent }) => {
 	return (
 		<div>
 			<h2>User Name</h2>
-			<form onSubmit={e => handleSubmit(e, userName, setFetchInfo, setContent)}>
+			<form
+				onSubmit={e =>
+					handleSubmit(e, userName, setFetchInfo, setContent, currentUser)
+				}
+			>
 				<InputContainer
 					labelText={'User Name'}
 					setValue={setUserName}
@@ -35,7 +38,7 @@ const CreateUserName = ({ setContent }) => {
 	);
 };
 
-const handleSubmit = (e, userName, setFetchInfo, setContent) => {
+const handleSubmit = (e, userName, setFetchInfo, setContent, currentUser) => {
 	e.preventDefault();
 	console.log(userName);
 	console.log(setFetchInfo);
@@ -43,7 +46,7 @@ const handleSubmit = (e, userName, setFetchInfo, setContent) => {
 	setFetchInfo({
 		url: URLS.USER_VALIDATION,
 		options: {
-			method: METHODS.GET,
+			method: METHODS.POST,
 			body: JSON.stringify(userName),
 			headers: HEADERS
 		}
@@ -53,6 +56,7 @@ const handleSubmit = (e, userName, setFetchInfo, setContent) => {
 	// 		setContent={setContent}
 	// 		userName={userName}
 	// 		setFetchInfo={setFetchInfo}
+	//		currentUser={currentUser}
 	// 	/>
 	// );
 };
