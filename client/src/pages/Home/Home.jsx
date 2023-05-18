@@ -5,10 +5,8 @@ import Section from '../../components/section/Section';
 import Player from '../../components/player/Player';
 import { ARTICLE_TITLES } from '../../constants/articleTitles';
 import { StyledHome } from './styles';
-import { useFetch } from '../../hooks/useFetch';
 
 const Home = () => {
-	const { data, loading, error, setFetchInfo } = useFetch();
 	const { currentUser, loadingFirebase } = useContext(AuthContext);
 
 	if (!currentUser && !loadingFirebase) {

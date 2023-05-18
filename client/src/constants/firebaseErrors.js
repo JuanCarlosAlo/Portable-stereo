@@ -10,5 +10,8 @@ export const FIREBASE_ERRORS = {
 	},
 	'auth/email-already-in-use': {
 		message: 'This email is already in use'
+	},
+	"The pasword doesn't match please try again": {
+		message: `The pasword doesn't match please try again`
 	}
 };

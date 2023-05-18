@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 const fetchData = async (fetchInfo, setFetchStatus, signal) => {
 	const { url, options } = fetchInfo;
-
+	console.log(options);
 	try {
 		const response = await fetch(url, options, signal);
 		const data = await response.json();
@@ -26,6 +26,7 @@ export const useFetch = initialFetch => {
 	useEffect(() => {
 		const controller = new AbortController();
 		fetchData(fetchInfo, setFetchStatus, controller.signal);
+		console.log(fetchInfo);
 		return () => controller.abort();
 	}, [fetchInfo]);
 

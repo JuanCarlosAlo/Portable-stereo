@@ -3,14 +3,14 @@ import { StyledHeader, StyledHeaderLogo, StyledLi, StyledMenu } from './styles';
 import { AuthContext } from '../../context/Auth.context';
 import Modal from '../modal/Modal';
 import LogIn from '../LogIn/LogIn';
-import Register from '../Register/Register';
+import Register from '../register/Register';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
-	const { currentUser, loading } = useContext(AuthContext);
+	const { currentUser, loadingFirebase } = useContext(AuthContext);
 	const [content, setContent] = useState(null);
 
-	if (loading) return <h1>Loading...</h1>;
+	if (loadingFirebase) return <h1>Loading...</h1>;
 
 	return (
 		<StyledHeader>

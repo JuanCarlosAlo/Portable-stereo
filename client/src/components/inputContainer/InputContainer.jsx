@@ -24,7 +24,7 @@ const InputContainer = ({
 	return (
 		<StyledInputContainer>
 			<StyledInput
-				onChange={e => setValue(value)}
+				onChange={e => setValue(e.target.value)}
 				type={type}
 				fontSize={fontSize}
 				placeholder={labelText}

@@ -1,15 +1,30 @@
 const { v4 } = require("uuid");
 const UserModel = require("../schemes/users.scheme");
+
 const controller = {};
 
-controller.createUser = async (req, res) => {
-  console.log(re.body);
+controller.userValidation = async (req, res) => {
+  console.log(req.body);
   const alreadyUserName = await UserModel.findOne({
-    userName: re.body.userName,
+    userName: req.body.userName,
   });
   if (alreadyUserName) {
     return res.status(409).send("User name already exist");
+  } else res.status(201).send("Username available");
+};
+
+controller.getUsers = async (req, res) => {
+  try {
+    const allUsers = await UserModel.find();
+    res.status(200).send(allUsers);
+  } catch (error) {
+    res.status(500).send({ error: "Error al leer la base de datos" });
   }
+};
+
+controller.createUser = async (req, res) => {
+  console.log(req.body);
+
   const {
     email,
     userName,
@@ -44,6 +59,7 @@ controller.createUser = async (req, res) => {
       albumsUploads,
     },
   });
+  console.log(newUser);
   await newUser.save();
 
   res.send("User Register");

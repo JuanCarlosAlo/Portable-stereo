@@ -62,7 +62,7 @@ const Register = ({ setContent }) => {
 						{FIREBASE_ERRORS[firebaseError].message}
 					</p>
 				)}
-				<MainColorButton text={'Next'} width={'250px'} />
+				<MainColorButton text={'Next'} width={'250px'} type={'submit'} />
 			</form>
 		</StyledRegister>
 	);
