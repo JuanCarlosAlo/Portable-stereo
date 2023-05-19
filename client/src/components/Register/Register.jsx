@@ -2,7 +2,6 @@ import { StyledCrossButton, StyledRegister } from './styles';
 
 import CreateUserName from '../createUserName/CreateUserName';
 import MainColorButton from '../main-color-button/MainColorButton';
-import InputContainer from '../inputContainer/InputContainer';
 
 import SocialLogin from '../social-logIn/SocialLogin';
 import { useForm } from 'react-hook-form';
@@ -80,7 +79,7 @@ const onSubmit = (
 	const { data } = fetchStatus;
 	console.log(data);
 	const emailUsed = data.find(user => user.email === email);
-	console.log(emailUsed);
+
 	if (!emailUsed) {
 		setContent(
 			<CreateUserName
