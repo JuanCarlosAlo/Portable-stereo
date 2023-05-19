@@ -4,6 +4,6 @@ const controller = require("../controllers/users.controller");
 
 usersRoutes.post("/new-user", controller.createUser);
 usersRoutes.get("/", controller.getUsers);
-usersRoutes.post("/user-validation", controller.userValidation);
+usersRoutes.get("/:id", controller.getUserId);
 
 module.exports = usersRoutes;

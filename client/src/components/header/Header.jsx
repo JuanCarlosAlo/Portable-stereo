@@ -5,12 +5,19 @@ import Modal from '../modal/Modal';
 import LogIn from '../logIn/LogIn';
 import Register from '../register/Register';
 import { Link } from 'react-router-dom';
+import { useFetch } from '../../hooks/useFetch';
+import { URLS } from '../../constants/urls';
 
 const Header = () => {
 	const { currentUser, loadingFirebase } = useContext(AuthContext);
-	const [content, setContent] = useState(null);
 
-	if (loadingFirebase) return <h1>Loading...</h1>;
+	if (loadingFirebase) return;
+	console.log(currentUser);
+	const [content, setContent] = useState(null);
+	const { fetchStatus, setFetchInfo } = useFetch({
+		url: `${currentUser ? URLS.ALL + currentUser.uid : URLS.ALL}`
+	});
+	if (fetchStatus.loading) return <h2>Loading</h2>;
 
 	return (
 		<StyledHeader>
@@ -27,7 +34,8 @@ const Header = () => {
 										setContent(
 											<Register
 												setContent={setContent}
-												currentUser={currentUser}
+												setFetchInfo={setFetchInfo}
+												fetchStatus={fetchStatus}
 											/>
 										)
 									}
@@ -43,7 +51,7 @@ const Header = () => {
 						) : (
 							<>
 								<li>
-									<a href={'/profile'}>{currentUser.email}</a>
+									<Link to={'/profile'}>{fetchStatus.data.userName}</Link>
 								</li>
 							</>
 						)}

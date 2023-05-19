@@ -10,11 +10,20 @@ import {
 	StyledProfileImage
 } from './styles';
 import Player from '../../components/player/Player';
+import { useFetch } from '../../hooks/useFetch';
+import { URLS } from '../../constants/urls';
 
 const Profile = () => {
-	const { currentUser } = useContext(AuthContext);
+	const { currentUser, loadingFirebase } = useContext(AuthContext);
 
+	if (loadingFirebase) return <h2>Loading</h2>;
+
+	const { fetchStatus, setFetchInfo } = useFetch({
+		url: URLS.ALL + currentUser.uid
+	});
+	console.log(fetchStatus);
 	const navigate = useNavigate();
+	if (fetchStatus.loading) return <h2>Loading</h2>;
 
 	return (
 		<>
@@ -23,19 +32,14 @@ const Profile = () => {
 				<StyledMainProfileContentContainer>
 					<StyledProfileImage src='/images/profile_default.svg' alt='' />
 					<div>
-						<p>Name</p>
+						<p>{fetchStatus.data.userName}</p>
 						<p>Followers</p>
 					</div>
 				</StyledMainProfileContentContainer>
 				<div>
-					<p>{currentUser.email}</p>
+					<p>{fetchStatus.data.email}</p>
 					<p>Bio</p>
-					<p>
-						Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odit quod
-						repudiandae iusto ad, cum nesciunt? Neque delectus voluptate
-						adipisci eum et beatae maiores perferendis veritatis? Exercitationem
-						consectetur tempore non reiciendis.
-					</p>
+					<p>{fetchStatus.data.bio}</p>
 				</div>
 
 				<div>

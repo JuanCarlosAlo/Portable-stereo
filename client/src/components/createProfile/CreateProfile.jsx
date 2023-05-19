@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { StyledCrossButton, StyledProfile } from './styles';
 import UploadPhoto from '../upload-photo/UploadPhoto';
 import { IMAGES } from '../../constants/imagesUrls';
@@ -7,12 +7,16 @@ import MainColorButton from '../main-color-button/MainColorButton';
 import { URLS } from '../../constants/urls';
 import { METHODS } from '../../constants/methods';
 import { HEADERS } from '../../constants/headers';
+import { AuthContext } from '../../context/Auth.context';
 
-const CreateProfile = ({ setContent, userName, setFetchInfo }) => {
-	console.log(setFetchInfo);
+const CreateProfile = ({ setContent, userName, setFetchInfo, formData }) => {
+	const { currentUser, loadingFirebase } = useContext(AuthContext);
+	if (loadingFirebase) return <h1>Loading</h1>;
 	const [profileError, SetProfileError] = useState();
 	const [profile, setProfile] = useState({
+		_id: currentUser.uid,
 		userName: userName.userName,
+		email: formData.email,
 		bio: '',
 		profileImg: IMAGES.DEFAULT_PROFILE,
 		mixtapes: [],
@@ -37,7 +41,7 @@ const CreateProfile = ({ setContent, userName, setFetchInfo }) => {
 			</div>
 			<form
 				onSubmit={e =>
-					handleSubmit(e, setFetchInfo, profile, setContent, SetProfileError)
+					handleSubmit(e, profile, setContent, SetProfileError, setFetchInfo)
 				}
 			>
 				<InputContainer
@@ -56,10 +60,10 @@ const CreateProfile = ({ setContent, userName, setFetchInfo }) => {
 
 const handleSubmit = (
 	e,
-	setFetchInfo,
 	profile,
 	setContent,
-	SetProfileError
+	SetProfileError,
+	setFetchInfo
 ) => {
 	e.preventDefault();
 	console.log(setFetchInfo);

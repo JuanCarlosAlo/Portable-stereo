@@ -2,23 +2,35 @@ import { useState } from 'react';
 import CreateProfile from '../createProfile/CreateProfile';
 import MainColorButton from '../main-color-button/MainColorButton';
 import InputContainer from '../inputContainer/InputContainer';
-import { URLS } from '../../constants/urls';
-import { HEADERS } from '../../constants/headers';
-import { METHODS } from '../../constants/methods';
-import { useFetch } from '../../hooks/useFetch';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../config/firebase.config';
+import { FIREBASE_ERRORS } from '../../constants/firebaseErrors';
 
-const CreateUserName = ({ setContent, currentUser }) => {
-	const { loading, data, setFetchInfo } = useFetch({ url: URLS.ALL });
+const CreateUserName = ({
+	setContent,
+	setFetchInfo,
+	fetchStatus,
+	formData
+}) => {
 	const [userName, setUserName] = useState();
-
-	if (loading) return <h1>Loading</h1>;
+	const [firebaseError, setFirebaseError] = useState();
+	const [userNameError, setUserNameError] = useState();
 
 	return (
 		<div>
 			<h2>User Name</h2>
 			<form
 				onSubmit={e =>
-					handleSubmit(e, userName, setFetchInfo, setContent, currentUser)
+					handleSubmit(
+						e,
+						userName,
+						setContent,
+						setFirebaseError,
+						formData,
+						fetchStatus,
+						setUserNameError,
+						setFetchInfo
+					)
 				}
 			>
 				<InputContainer
@@ -33,32 +45,43 @@ const CreateUserName = ({ setContent, currentUser }) => {
 			</form>
 			<p>This Username can be change later on</p>
 
-			{/* {error && <p>{error}</p>} */}
+			{/* {firebaseError && <p>{FIREBASE_ERRORS[firebaseError].message}</p>} */}
+			{userNameError && <p>{userNameError}</p>}
 		</div>
 	);
 };
 
-const handleSubmit = (e, userName, setFetchInfo, setContent, currentUser) => {
+const handleSubmit = async (
+	e,
+	userName,
+	setContent,
+	setFirebaseError,
+	formData,
+	fetchStatus,
+	setUserNameError,
+	setFetchInfo
+) => {
 	e.preventDefault();
-	console.log(userName);
-	console.log(setFetchInfo);
+	const { data } = fetchStatus;
+	const usernameUsed = data.find(user => user.userName === userName.userName);
 
-	setFetchInfo({
-		url: URLS.USER_VALIDATION,
-		options: {
-			method: METHODS.POST,
-			body: JSON.stringify(userName),
-			headers: HEADERS
+	const { email, password } = formData;
+	if (!usernameUsed) {
+		try {
+			await createUserWithEmailAndPassword(auth, email, password);
+			setContent(
+				<CreateProfile
+					setContent={setContent}
+					userName={userName}
+					setFetchInfo={setFetchInfo}
+					formData={formData}
+				/>
+			);
+		} catch (err) {
+			setFirebaseError(err.code);
+			console.log(err);
 		}
-	});
-	// setContent(
-	// 	<CreateProfile
-	// 		setContent={setContent}
-	// 		userName={userName}
-	// 		setFetchInfo={setFetchInfo}
-	//		currentUser={currentUser}
-	// 	/>
-	// );
+	} else setUserNameError('This User Name is already in use');
 };
 
 export default CreateUserName;

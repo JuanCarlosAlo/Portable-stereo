@@ -1,19 +1,21 @@
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useState } from 'react';
+
 import { auth } from '../../config/firebase.config';
 
 import { StyledCrossButton, StyledSignIn } from './styles';
-import { regexpEmail } from '../../constants/regex';
+
 import MainColorButton from '../main-color-button/MainColorButton';
 import SocialLogin from '../social-logIn/SocialLogin';
 import InputContainer from '../inputContainer/InputContainer';
+import { useForm } from 'react-hook-form';
+import { FORM_VALIDATIONS } from '../../constants/inputValidation';
 
 const LogIn = ({ setContent }) => {
-	const [error, setError] = useState();
-	const [signIn, setSignIn] = useState({
-		email: '',
-		password: ''
-	});
+	const {
+		handleSubmit,
+		register,
+		formState: { errors }
+	} = useForm({ mode: 'onBlur' });
 
 	return (
 		<StyledSignIn>
@@ -26,45 +28,44 @@ const LogIn = ({ setContent }) => {
 
 			<SocialLogin social={'google'} />
 			<SocialLogin social={'twitter'} />
-			<form onSubmit={e => handleSubmit(e, signIn, setError, setContent)}>
-				<InputContainer
-					labelText={'Email'}
-					setValue={setSignIn}
-					value={signIn}
-					keyValue={'email'}
-					type={'text'}
-					stack={true}
-				/>
-				<InputContainer
-					labelText={'Password'}
-					setValue={setSignIn}
-					value={signIn}
-					keyValue={'password'}
-					type={'password'}
-					stack={true}
+			<form
+				onSubmit={handleSubmit((formData, e) =>
+					onSubmit(formData, e, setContent)
+				)}
+			>
+				<div>
+					<label htmlFor='email'>Email</label>
+					<input
+						type='text'
+						name='email'
+						id='email'
+						{...register('email', FORM_VALIDATIONS.email)}
+					/>
+				</div>
+				<label htmlFor='password'>Password</label>
+				<input
+					type='paswword'
+					name='password'
+					id='password'
+					{...register('password', FORM_VALIDATIONS.password)}
 				/>
 
-				{error && <p>{error}</p>}
+				{console.log(errors)}
 				<MainColorButton width={'250px'} text={'Log In'} />
 			</form>
 		</StyledSignIn>
 	);
 };
 
-const handleSubmit = async (e, signIn, setError, setContent) => {
+const onSubmit = async (formData, e, setContent) => {
 	e.preventDefault();
-	const { email, password } = signIn;
-	if (regexpEmail.test(email)) {
-		try {
-			await signInWithEmailAndPassword(auth, email, password);
-			setContent(null);
-		} catch (error) {
-			setError('Invalid email');
-		}
-		e.target.reset();
-	} else {
-		setError('Please use a valid email');
-	}
+	const { email, password } = formData;
+
+	try {
+		await signInWithEmailAndPassword(auth, email, password);
+		setContent(null);
+	} catch (error) {}
+	// e.target.reset();
 };
 
 export default LogIn;

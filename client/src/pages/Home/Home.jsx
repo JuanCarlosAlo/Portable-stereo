@@ -8,8 +8,8 @@ import { StyledHome } from './styles';
 
 const Home = () => {
 	const { currentUser, loadingFirebase } = useContext(AuthContext);
-
-	if (!currentUser && !loadingFirebase) {
+	if (loadingFirebase) return <h2>Loading</h2>;
+	if (!currentUser) {
 		return (
 			<StyledHome>
 				<Banner />

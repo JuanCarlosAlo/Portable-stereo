@@ -1,22 +1,21 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useState } from 'react';
-import { auth } from '../../config/firebase.config';
-
 import { StyledCrossButton, StyledRegister } from './styles';
 
 import CreateUserName from '../createUserName/CreateUserName';
 import MainColorButton from '../main-color-button/MainColorButton';
 import InputContainer from '../inputContainer/InputContainer';
-import { FIREBASE_ERRORS } from '../../constants/firebaseErrors';
-import SocialLogin from '../social-logIn/SocialLogin';
 
-const Register = ({ setContent, currentUser }) => {
-	const [firebaseError, setFirebaseError] = useState();
-	const [register, setRegister] = useState({
-		email: '',
-		password: '',
-		confirmPassword: ''
-	});
+import SocialLogin from '../social-logIn/SocialLogin';
+import { useForm } from 'react-hook-form';
+import { FORM_VALIDATIONS } from '../../constants/inputValidation';
+import { useState } from 'react';
+
+const Register = ({ setContent, setFetchInfo, fetchStatus }) => {
+	const {
+		handleSubmit,
+		register,
+		formState: { errors }
+	} = useForm({ mode: 'onBlur' });
+	const [usedEmail, setUsedEmail] = useState();
 
 	return (
 		<StyledRegister>
@@ -27,72 +26,75 @@ const Register = ({ setContent, currentUser }) => {
 			/>
 			<h2>Register</h2>
 			<SocialLogin social={'google'} />
-			<SocialLogin social={'twitter'} />
-			<form
-				onSubmit={e =>
-					handleSubmit(e, register, setFirebaseError, setContent, currentUser)
-				}
-			>
-				<InputContainer
-					labelText={'Email'}
-					setValue={setRegister}
-					value={register}
-					keyValue={'email'}
-					type={'text'}
-					stack={true}
-				/>
-				<InputContainer
-					labelText={'Password'}
-					setValue={setRegister}
-					value={register}
-					keyValue={'password'}
-					type={'password'}
-					stack={true}
-				/>
-				<InputContainer
-					labelText={'Confirm Password'}
-					setValue={setRegister}
-					value={register}
-					keyValue={'confirmPassword'}
-					type={'password'}
-					stack={true}
-				/>
 
-				{firebaseError && (
-					<p>
-						{console.log(FIREBASE_ERRORS, firebaseError)}
-						{FIREBASE_ERRORS[firebaseError].message}
-					</p>
+			<form
+				onSubmit={handleSubmit((formData, e) =>
+					onSubmit(
+						formData,
+						e,
+						setContent,
+						setFetchInfo,
+						fetchStatus,
+						setUsedEmail
+					)
 				)}
+			>
+				<div>
+					<label htmlFor='email'>Email</label>
+					<input
+						type='text'
+						name='email'
+						id='email'
+						{...register('email', FORM_VALIDATIONS.email)}
+					/>
+				</div>
+
+				<div>
+					<label htmlFor='password'>Password</label>
+					<input
+						type='paswword'
+						name='password'
+						id='password'
+						{...register('password', FORM_VALIDATIONS.password)}
+					/>
+				</div>
+
 				<MainColorButton text={'Next'} width={'250px'} type={'submit'} />
+				<p>{errors?.email?.message}</p>
+				{usedEmail && <p>{usedEmail}</p>}
 			</form>
 		</StyledRegister>
 	);
 };
 
-const handleSubmit = async (
+const onSubmit = (
+	formData,
 	e,
-	register,
-	setFirebaseError,
 	setContent,
-	currentUser
+	setFetchInfo,
+	fetchStatus,
+	setUsedEmail
 ) => {
 	e.preventDefault();
-	const { email, password, confirmPassword } = register;
-	console.log(password);
-	console.log(confirmPassword);
-	if (password === confirmPassword) {
-		try {
-			await createUserWithEmailAndPassword(auth, email, password);
-			setContent(
-				<CreateUserName setContent={setContent} currentUser={currentUser} />
-			);
-		} catch (err) {
-			setFirebaseError(err.code);
-		}
-	} else setFirebaseError(`The pasword doesn't match please try again`);
+	const { email } = formData;
+	const { data } = fetchStatus;
+	console.log(data);
+	const emailUsed = data.find(user => user.email === email);
+	console.log(emailUsed);
+	if (!emailUsed) {
+		setContent(
+			<CreateUserName
+				setContent={setContent}
+				setFetchInfo={setFetchInfo}
+				fetchStatus={fetchStatus}
+				formData={formData}
+			/>
+		);
+	} else {
+		setUsedEmail('This email is already in use');
+	}
 
-	e.target.reset();
+	// e.target.reset();
 };
 
 export default Register;

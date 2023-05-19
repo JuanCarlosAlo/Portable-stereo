@@ -3,16 +3,14 @@ const UserModel = require("../schemes/users.scheme");
 
 const controller = {};
 
-controller;
-
-controller.userValidation = async (req, res) => {
-  console.log(req.body);
-  const alreadyUserName = await UserModel.findOne({
-    userName: req.body.userName,
-  });
-  if (alreadyUserName) {
-    return res.status(409).send({ message: "User name already exist" });
-  } else res.status(201).send({ message: "Username available" });
+controller.getUserId = async (req, res) => {
+  try {
+    const autentifiedUser = await UserModel.findById(req.params.id);
+    console.log(autentifiedUser);
+    res.status(200).send(autentifiedUser);
+  } catch (error) {
+    res.status(500).send({ error: "Error al leer la base de datos" });
+  }
 };
 
 controller.getUsers = async (req, res) => {
