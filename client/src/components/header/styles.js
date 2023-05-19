@@ -24,4 +24,15 @@ const StyledMenu = styled.ul`
 	gap: 2rem;
 `;
 
-export { StyledHeader, StyledHeaderLogo, StyledMenu, StyledLi };
+const StyledProfileImg = styled.img`
+	width: 48px;
+	height: 48px;
+`;
+
+export {
+	StyledHeader,
+	StyledHeaderLogo,
+	StyledMenu,
+	StyledLi,
+	StyledProfileImg
+};
