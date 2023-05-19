@@ -2,85 +2,87 @@ import { useState } from 'react';
 import CreateProfile from '../createProfile/CreateProfile';
 import MainColorButton from '../main-color-button/MainColorButton';
 import InputContainer from '../inputContainer/InputContainer';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../config/firebase.config';
-import { FIREBASE_ERRORS } from '../../constants/firebaseErrors';
 
-const CreateUserName = ({
-	setContent,
-	setFetchInfo,
-	fetchStatus,
-	formData
-}) => {
-	const [userName, setUserName] = useState();
-	const [firebaseError, setFirebaseError] = useState();
+import { useForm } from 'react-hook-form';
+import { URLS } from '../../constants/urls';
+import { METHODS } from '../../constants/methods';
+import { HEADERS } from '../../constants/headers';
+
+const CreateUserName = ({ setContent, formData, setFetchInfo, data }) => {
+	const {
+		handleSubmit,
+		register,
+		formState: { errors }
+	} = useForm({ mode: 'onBlur' });
 	const [userNameError, setUserNameError] = useState();
 
+	console.log(data);
 	return (
 		<div>
 			<h2>User Name</h2>
 			<form
-				onSubmit={e =>
-					handleSubmit(
-						e,
+				onSubmit={handleSubmit((userName, e) =>
+					onSubmit(
 						userName,
+						e,
 						setContent,
-						setFirebaseError,
 						formData,
-						fetchStatus,
+						data,
 						setUserNameError,
 						setFetchInfo
 					)
-				}
+				)}
 			>
-				<InputContainer
-					labelText={'User Name'}
-					setValue={setUserName}
-					value={userName}
-					keyValue={'userName'}
-					fontSize={'2rem'}
-					stack={true}
-				/>
+				<div>
+					<label htmlFor='email'>UserName</label>
+					<input
+						type='text'
+						name='userName'
+						id='userName'
+						{...register('userName')}
+					/>
+				</div>
 				<MainColorButton text={'Next'} width={'250px'} type={'submit'} />
 			</form>
 			<p>This Username can be change later on</p>
-
-			{/* {firebaseError && <p>{FIREBASE_ERRORS[firebaseError].message}</p>} */}
+			<p>{errors?.email?.message}</p>
 			{userNameError && <p>{userNameError}</p>}
 		</div>
 	);
 };
 
-const handleSubmit = async (
-	e,
+const onSubmit = async (
 	userName,
+	e,
 	setContent,
-	setFirebaseError,
 	formData,
-	fetchStatus,
+	data,
 	setUserNameError,
 	setFetchInfo
 ) => {
 	e.preventDefault();
-	const { data } = fetchStatus;
+	console.log(data);
 	const usernameUsed = data.find(user => user.userName === userName.userName);
 
-	const { email, password } = formData;
 	if (!usernameUsed) {
-		try {
-			await createUserWithEmailAndPassword(auth, email, password);
-			setContent(
-				<CreateProfile
-					setContent={setContent}
-					userName={userName}
-					setFetchInfo={setFetchInfo}
-					formData={formData}
-				/>
-			);
-		} catch (err) {
-			setFirebaseError(err.code);
-			console.log(err);
-		}
+		setFetchInfo({
+			url: URLS.PATCH,
+			options: {
+				method: METHODS.PATCH,
+				body: JSON.stringify({
+					userName
+				}),
+				headers: HEADERS
+			}
+		});
+		// setContent(
+		// 	<CreateProfile
+		// 		setContent={setContent}
+		// 		userName={userName}
+		// 		formData={formData}
+		// 		userRegistered={userRegistered}
+		// 	/>
+		// );
 	} else setUserNameError('This User Name is already in use');
 };
 

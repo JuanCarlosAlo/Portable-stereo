@@ -9,24 +9,14 @@ import { METHODS } from '../../constants/methods';
 import { HEADERS } from '../../constants/headers';
 import { AuthContext } from '../../context/Auth.context';
 
-const CreateProfile = ({ setContent, userName, setFetchInfo, formData }) => {
-	const { currentUser, loadingFirebase } = useContext(AuthContext);
-	if (loadingFirebase) return <h1>Loading</h1>;
+const CreateProfile = ({
+	setContent,
+	userName,
+	setFetchInfo,
+	formData,
+	userRegistered
+}) => {
 	const [profileError, SetProfileError] = useState();
-	const [profile, setProfile] = useState({
-		_id: currentUser.uid,
-		userName: userName.userName,
-		email: formData.email,
-		bio: '',
-		profileImg: IMAGES.DEFAULT_PROFILE,
-		mixtapes: [],
-		selfLikes: [],
-		othersLikes: 0,
-		selfFollows: [],
-		othersFollows: 0,
-		tracksUploads: [],
-		albumsUploads: []
-	});
 
 	return (
 		<StyledProfile>
@@ -66,15 +56,6 @@ const handleSubmit = (
 	setFetchInfo
 ) => {
 	e.preventDefault();
-	console.log(setFetchInfo);
-	setFetchInfo({
-		url: URLS.POST,
-		options: {
-			method: METHODS.POST,
-			body: JSON.stringify(profile),
-			headers: HEADERS
-		}
-	});
 };
 
 export default CreateProfile;

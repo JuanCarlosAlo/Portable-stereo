@@ -26,9 +26,10 @@ export const useFetch = initialFetch => {
 	useEffect(() => {
 		const controller = new AbortController();
 		fetchData(fetchInfo, setFetchStatus, controller.signal);
-		console.log(fetchInfo);
+
 		return () => controller.abort();
 	}, [fetchInfo]);
+	console.log(fetchStatus);
 
-	return { fetchStatus, setFetchInfo };
+	return { ...fetchStatus, setFetchInfo };
 };

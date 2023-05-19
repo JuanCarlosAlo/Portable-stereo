@@ -5,5 +5,6 @@ const controller = require("../controllers/users.controller");
 usersRoutes.post("/new-user", controller.createUser);
 usersRoutes.get("/", controller.getUsers);
 usersRoutes.get("/:id", controller.getUserId);
+usersRoutes.patch("/:id", controller.updateUser);
 
 module.exports = usersRoutes;

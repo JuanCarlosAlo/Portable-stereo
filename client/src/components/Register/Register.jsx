@@ -5,17 +5,29 @@ import MainColorButton from '../main-color-button/MainColorButton';
 
 import SocialLogin from '../social-logIn/SocialLogin';
 import { useForm } from 'react-hook-form';
-import { FORM_VALIDATIONS } from '../../constants/inputValidation';
-import { useState } from 'react';
+import {
+	FORM_DEFAULT_VALUES,
+	FORM_VALIDATIONS
+} from '../../constants/inputValidation';
+import { auth } from '../../config/firebase.config';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useContext, useState } from 'react';
+import { DataContext } from '../../context/Data.context';
+import { URLS } from '../../constants/urls';
+import { METHODS } from '../../constants/methods';
+import { HEADERS } from '../../constants/headers';
 
-const Register = ({ setContent, setFetchInfo, fetchStatus }) => {
+const Register = ({ setContent }) => {
 	const {
 		handleSubmit,
 		register,
 		formState: { errors }
 	} = useForm({ mode: 'onBlur' });
-	const [usedEmail, setUsedEmail] = useState();
+	const { data, loading, error, setFetchInfo } = useContext(DataContext);
 
+	const [usedEmail, setUsedEmail] = useState();
+	if (loading) return <h2>Loading</h2>;
+	console.log(data);
 	return (
 		<StyledRegister>
 			<StyledCrossButton
@@ -28,14 +40,7 @@ const Register = ({ setContent, setFetchInfo, fetchStatus }) => {
 
 			<form
 				onSubmit={handleSubmit((formData, e) =>
-					onSubmit(
-						formData,
-						e,
-						setContent,
-						setFetchInfo,
-						fetchStatus,
-						setUsedEmail
-					)
+					onSubmit(formData, e, setContent, setUsedEmail, data, setFetchInfo)
 				)}
 			>
 				<div>
@@ -66,31 +71,49 @@ const Register = ({ setContent, setFetchInfo, fetchStatus }) => {
 	);
 };
 
-const onSubmit = (
+const onSubmit = async (
 	formData,
 	e,
 	setContent,
-	setFetchInfo,
-	fetchStatus,
-	setUsedEmail
+	setUsedEmail,
+	data,
+	setFetchInfo
 ) => {
 	e.preventDefault();
-	const { email } = formData;
-	const { data } = fetchStatus;
-	console.log(data);
-	const emailUsed = data.find(user => user.email === email);
-
+	const { email, password } = formData;
+	const emailUsed = data.find(user => user.email === formData.email);
 	if (!emailUsed) {
-		setContent(
-			<CreateUserName
-				setContent={setContent}
-				setFetchInfo={setFetchInfo}
-				fetchStatus={fetchStatus}
-				formData={formData}
-			/>
-		);
-	} else {
-		setUsedEmail('This email is already in use');
+		try {
+			const userRegistered = await createUserWithEmailAndPassword(
+				auth,
+				email,
+				password
+			);
+
+			setFetchInfo({
+				url: URLS.POST,
+				options: {
+					method: METHODS.POST,
+					body: JSON.stringify({
+						_id: userRegistered.user.uid,
+						userName: 'UserName' + Date.now(),
+						email: formData.email,
+						...FORM_DEFAULT_VALUES
+					}),
+					headers: HEADERS
+				}
+			});
+			setContent(
+				<CreateUserName
+					setContent={setContent}
+					formData={formData}
+					setFetchInfo={setFetchInfo}
+					data={data}
+				/>
+			);
+		} catch (err) {
+			setUsedEmail(err.code);
+		}
 	}
 
 	// e.target.reset();

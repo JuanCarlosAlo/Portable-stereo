@@ -66,4 +66,20 @@ controller.createUser = async (req, res) => {
   res.send("User Register");
 };
 
+controller.updateUser = async (req, res) => {
+  console.log(req.body);
+  try {
+    await UserModel.updateOne(
+      { _id: req.params._id },
+      { $set: { ...req.body } }
+    );
+  } catch {
+    res.status(500).send({ error: "Error" });
+  }
+
+  const allUsers = await UserModel.findById(req.params._id);
+
+  res.send(allUsers);
+};
+
 module.exports = controller;

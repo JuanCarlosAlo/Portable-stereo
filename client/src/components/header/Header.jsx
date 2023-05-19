@@ -11,20 +11,18 @@ import Modal from '../modal/Modal';
 import LogIn from '../logIn/LogIn';
 import Register from '../register/Register';
 import { Link } from 'react-router-dom';
-import { useFetch } from '../../hooks/useFetch';
-import { URLS } from '../../constants/urls';
+
+import { DataContext } from '../../context/Data.context';
 
 const Header = () => {
 	const { currentUser, loadingFirebase } = useContext(AuthContext);
-
-	if (loadingFirebase) return;
-	console.log(currentUser);
+	const { data, loading } = useContext(DataContext);
 	const [content, setContent] = useState(null);
-	const { fetchStatus, setFetchInfo } = useFetch({
-		url: `${currentUser ? URLS.ALL + currentUser.uid : URLS.ALL}`
-	});
-	if (fetchStatus.loading) return <h2>Loading</h2>;
-	console.log(fetchStatus.data);
+
+	if (loadingFirebase) return <h2>Loading</h2>;
+	if (loading) return <h2>Loading</h2>;
+	console.log(data);
+
 	return (
 		<StyledHeader>
 			<Link to='/'>
@@ -35,15 +33,7 @@ const Header = () => {
 				<nav>
 					<StyledMenu>
 						<StyledLi
-							onClick={() =>
-								setContent(
-									<Register
-										setContent={setContent}
-										setFetchInfo={setFetchInfo}
-										fetchStatus={fetchStatus}
-									/>
-								)
-							}
+							onClick={() => setContent(<Register setContent={setContent} />)}
 						>
 							Register
 						</StyledLi>
@@ -57,7 +47,7 @@ const Header = () => {
 			) : (
 				<>
 					<Link to={'/profile'}>
-						<StyledProfileImg src={fetchStatus.data.profileImg} alt='' />
+						<StyledProfileImg src='/images/profile_default.svg' alt='' />
 					</Link>
 				</>
 			)}

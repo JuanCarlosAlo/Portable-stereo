@@ -14,7 +14,6 @@ app.use(express.json());
 app.use("/users", usersRoutes);
 
 const startServer = async () => {
-  console.log(process.env.MONGODB_URL);
   try {
     await mongoose.connect(process.env.MONGODB_URL);
     console.log("Conected to Database");

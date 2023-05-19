@@ -1,3 +1,5 @@
+import { IMAGES } from './imagesUrls';
+
 const messages = {
 	name: 'El formato introducido no es correcto',
 	requireName: 'The username is obligatory',
@@ -5,7 +7,8 @@ const messages = {
 	requireEmail: 'The email is obligatory',
 	password:
 		'The email must be at least 6 digits long with 1 digit 1 uppercase word and 1 lowercase word',
-	requirePassword: 'The password is obligatory'
+	requirePassword: 'The password is obligatory',
+	requireUserName: 'The username is obligatory'
 };
 
 const patterns = {
@@ -13,6 +16,17 @@ const patterns = {
 	email:
 		/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/,
 	password: /^(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,16}$/
+};
+export const FORM_DEFAULT_VALUES = {
+	bio: '',
+	profileImg: IMAGES.DEFAULT_PROFILE,
+	mixtapes: [],
+	selfLikes: [],
+	othersLikes: 0,
+	selfFollows: [],
+	othersFollows: 0,
+	tracksUploads: [],
+	albumsUploads: []
 };
 
 export const FORM_VALIDATIONS = {
@@ -36,5 +50,8 @@ export const FORM_VALIDATIONS = {
 			value: patterns.password,
 			message: messages.password
 		}
+	},
+	username: {
+		required: messages.requireUserName
 	}
 };
