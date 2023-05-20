@@ -6,7 +6,7 @@ const controller = {};
 controller.getUserId = async (req, res) => {
   try {
     const autentifiedUser = await UserModel.findById(req.params.id);
-    console.log(autentifiedUser);
+
     res.status(200).send(autentifiedUser);
   } catch (error) {
     res.status(500).send({ error: "Error al leer la base de datos" });
@@ -23,8 +23,6 @@ controller.getUsers = async (req, res) => {
 };
 
 controller.createUser = async (req, res) => {
-  console.log(req.body);
-
   const {
     _id,
     email,
@@ -60,26 +58,26 @@ controller.createUser = async (req, res) => {
       albumsUploads,
     },
   });
-  console.log(newUser);
-  await newUser.save();
 
-  res.send("User Register");
+  await newUser.save();
+  const currentUser = await UserModel.findById(req.body._id);
+  console.log(currentUser);
+  res.send(currentUser);
 };
 
 controller.updateUser = async (req, res) => {
-  console.log(req.body);
   try {
     await UserModel.updateOne(
-      { _id: req.params._id },
+      { _id: req.params.id },
       { $set: { ...req.body } }
     );
   } catch {
     res.status(500).send({ error: "Error" });
   }
 
-  const allUsers = await UserModel.findById(req.params._id);
+  const currentUser = await UserModel.findById(req.params.id);
 
-  res.send(allUsers);
+  res.send(currentUser);
 };
 
 module.exports = controller;

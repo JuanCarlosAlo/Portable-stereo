@@ -10,6 +10,7 @@ const StyledProfile = styled.div`
 
 const StyledProfileImage = styled.img`
 	width: 100px;
+	height: 100px;
 	border-radius: 50%;
 	background-image: ${({ bgImg }) => {
 		if (bgImg) {
@@ -22,6 +23,7 @@ const StyledProfileImage = styled.img`
 			`;
 		}
 	}};
+	background-size: cover;
 `;
 const StyledMainProfileContentContainer = styled.div`
 	display: flex;

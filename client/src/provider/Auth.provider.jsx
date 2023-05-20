@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }) => {
 		});
 		return () => unsuscribe();
 	}, []);
+
 	return (
 		<AuthContext.Provider
 			value={{ currentUser, setCurrentUser, loadingFirebase }}
