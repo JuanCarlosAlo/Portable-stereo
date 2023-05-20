@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AuthContext } from '../../context/Auth.context';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
@@ -11,15 +11,19 @@ import {
 } from './styles';
 import Player from '../../components/player/Player';
 import { URLS } from '../../constants/urls';
-import { useFetch } from '../../hooks/useFetch';
+
 import HeaderLogin from '../../components/header-login/HeaderLogin';
+import { DataContext } from '../../context/Data.context';
 
 const Profile = () => {
 	const { currentUser, loadingFirebase } = useContext(AuthContext);
 
-	const { data, loading, error, setFetchInfo } = useFetch({
-		url: URLS.ALL + currentUser.uid
-	});
+	const { setFetchInfo, data, loading, error } = useContext(DataContext);
+
+	useEffect(() => {
+		if (!currentUser) return;
+		setFetchInfo({ url: URLS.ALL + currentUser.uid });
+	}, [currentUser]);
 
 	const navigate = useNavigate();
 	if (loadingFirebase) return <h2>Loading</h2>;

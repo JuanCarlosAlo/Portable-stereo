@@ -1,32 +1,38 @@
 import { useForm } from 'react-hook-form';
 import { AuthContext } from '../../context/Auth.context';
-import { useFetch } from '../../hooks/useFetch';
 import { URLS } from '../../constants/urls';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { IMAGES } from '../../constants/imagesUrls';
 import UploadPhoto from '../../components/upload-photo/UploadPhoto';
 import MainColorButton from '../../components/main-color-button/MainColorButton';
 import { METHODS } from '../../constants/methods';
 import { HEADERS } from '../../constants/headers';
+import { useNavigate } from 'react-router-dom';
+import { DataContext } from '../../context/Data.context';
 
 const CreateProfile = () => {
 	const { currentUser, loadingFirebase } = useContext(AuthContext);
-	console.log(currentUser);
+
+	const { setFetchInfo, data, loading, error } = useContext(DataContext);
+
+	useEffect(() => {
+		if (!currentUser) return;
+		setFetchInfo({ url: URLS.ALL + currentUser.uid });
+	}, [currentUser]);
+
 	const {
 		handleSubmit,
 		register,
 		formState: { errors }
 	} = useForm({ mode: 'onBlur' });
 
-	const { data, loading, error, setFetchInfo } = useFetch({
-		url: URLS.ALL + currentUser.uid
-	});
-
 	const [profileInfo, setprofileInfo] = useState({
 		profileImg: IMAGES.DEFAULT_PROFILE
 	});
-	if (loadingFirebase) return <h2>Loading</h2>;
-	if (loading) return <h2>Loading</h2>;
+	const navigate = useNavigate();
+	if (loadingFirebase || loading) return <h2>Loading</h2>;
+	if (error) return <h2>Error</h2>;
+	console.log(data);
 
 	return (
 		<div>
@@ -36,7 +42,7 @@ const CreateProfile = () => {
 			</div>
 			<form
 				onSubmit={handleSubmit((formData, e) =>
-					onSubmit(formData, e, data, setFetchInfo, profileInfo)
+					onSubmit(formData, e, data, setFetchInfo, profileInfo, navigate)
 				)}
 			>
 				<div>
@@ -62,7 +68,14 @@ const CreateProfile = () => {
 	);
 };
 
-const onSubmit = async (formData, e, data, setFetchInfo, profileInfo) => {
+const onSubmit = async (
+	formData,
+	e,
+	data,
+	setFetchInfo,
+	profileInfo,
+	navigate
+) => {
 	e.preventDefault();
 	const { userName, bio } = formData;
 	const profileImg = profileInfo.profileImg;
@@ -79,6 +92,7 @@ const onSubmit = async (formData, e, data, setFetchInfo, profileInfo) => {
 			headers: HEADERS
 		}
 	});
+	navigate('/discover');
 };
 
 export default CreateProfile;

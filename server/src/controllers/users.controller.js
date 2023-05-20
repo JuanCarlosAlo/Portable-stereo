@@ -4,9 +4,9 @@ const UserModel = require("../schemes/users.scheme");
 const controller = {};
 
 controller.getUserId = async (req, res) => {
+  const autentifiedUser = await UserModel.findById(req.params.id);
   try {
-    const autentifiedUser = await UserModel.findById(req.params.id);
-
+    console.log(autentifiedUser, req.params.id);
     res.status(200).send(autentifiedUser);
   } catch (error) {
     res.status(500).send({ error: "Error al leer la base de datos" });

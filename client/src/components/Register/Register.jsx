@@ -19,16 +19,19 @@ import { HEADERS } from '../../constants/headers';
 import { useNavigate } from 'react-router-dom';
 
 const Register = ({ setContent }) => {
+	const navigate = useNavigate();
 	const {
 		handleSubmit,
 		register,
 		formState: { errors }
 	} = useForm({ mode: 'onBlur' });
+
 	const { data, loading, error, setFetchInfo } = useContext(DataContext);
-	const navigate = useNavigate();
+
 	const [usedEmail, setUsedEmail] = useState();
+
 	if (loading) return <h2>Loading</h2>;
-	console.log(data);
+
 	return (
 		<StyledRegister>
 			<StyledCrossButton
@@ -41,15 +44,7 @@ const Register = ({ setContent }) => {
 
 			<form
 				onSubmit={handleSubmit((formData, e) =>
-					onSubmit(
-						formData,
-						e,
-						setContent,
-						setUsedEmail,
-						data,
-						setFetchInfo,
-						navigate
-					)
+					onSubmit(formData, e, setUsedEmail, data, setFetchInfo, navigate)
 				)}
 			>
 				<div>
@@ -83,7 +78,6 @@ const Register = ({ setContent }) => {
 const onSubmit = async (
 	formData,
 	e,
-	setContent,
 	setUsedEmail,
 	data,
 	setFetchInfo,
@@ -91,9 +85,9 @@ const onSubmit = async (
 ) => {
 	e.preventDefault();
 	const { email, password } = formData;
-	console.log(data);
+
 	const emailUsed = data.find(user => user.email === formData.email);
-	console.log(emailUsed);
+	console.log(data);
 	if (!emailUsed) {
 		try {
 			const userRegistered = await createUserWithEmailAndPassword(
@@ -102,8 +96,7 @@ const onSubmit = async (
 				password
 			);
 			const userName = 'UserName' + Date.now();
-
-			setFetchInfo({
+			await setFetchInfo({
 				url: URLS.POST,
 				options: {
 					method: METHODS.POST,

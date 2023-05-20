@@ -1,13 +1,14 @@
+import { StyledSection } from '../../pages/Profile/styles';
 import { StyledBar, StyledTitleContainer } from './styles';
 
 const Section = ({ title }) => {
 	return (
-		<div>
+		<StyledSection>
 			<StyledTitleContainer>
 				<p>{title}</p>
 				<StyledBar></StyledBar>
 			</StyledTitleContainer>
-		</div>
+		</StyledSection>
 	);
 };
 

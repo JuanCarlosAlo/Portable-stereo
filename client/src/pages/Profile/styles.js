@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 import { COLORS } from '../../constants/colors';
 import { PLAYER } from '../../constants/player';
-
+const StyledSection = styled.div`
+	display: flex;
+	gap: 1rem;
+	height: 350px;
+`;
 const StyledProfile = styled.div`
 	padding-left: 1rem;
 	padding-right: 1rem;
@@ -53,5 +57,6 @@ export {
 	StyledButton,
 	StyledProfileImage,
 	StyledMainProfileContentContainer,
-	StyledProfile
+	StyledProfile,
+	StyledSection
 };
