@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 import { COLORS } from '../../constants/colors';
 
+const StyledSection = styled.div`
+	display: flex;
+	gap: 1rem;
+	height: 350px;
+`;
 const StyledTitleContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
@@ -19,4 +24,4 @@ const StyledBar = styled.div`
 	}
 `;
 
-export { StyledTitleContainer, StyledBar };
+export { StyledTitleContainer, StyledBar, StyledSection };

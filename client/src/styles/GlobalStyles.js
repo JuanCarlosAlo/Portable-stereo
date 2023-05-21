@@ -12,6 +12,10 @@ const GlobalStyles = createGlobalStyle`
     src: url('/Fonts/fot-rodin-pro/FOTpro-m.otf');
 }
 @font-face {
+    font-family: FotRodin-EB;
+    src: url('/Fonts/fot-rodin-pro/FOTRodin-Pro-EB.otf');
+}
+@font-face {
     font-family: Red-Seven;
     src: url('/Fonts/red-seven/Red-Seven.otf');
 }

@@ -76,7 +76,7 @@ controller.updateUser = async (req, res) => {
   }
 
   const currentUser = await UserModel.findById(req.params.id);
-
+  console.log(currentUser);
   res.send(currentUser);
 };
 

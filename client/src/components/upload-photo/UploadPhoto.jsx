@@ -1,8 +1,10 @@
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { storage } from '../../config/firebase.config';
+import { StyledImg } from './styles';
 
-const UploadPhoto = ({ profileInfo, setProfile }) => {
+const UploadPhoto = ({ profileInfo, setProfile, type }) => {
+	console.log(type);
 	return (
 		<>
 			<form>
@@ -14,7 +16,9 @@ const UploadPhoto = ({ profileInfo, setProfile }) => {
 				/>
 			</form>
 
-			{profileInfo.profileImg && <img src={profileInfo.profileImg} alt='' />}
+			{profileInfo.profileImg && (
+				<StyledImg type={type} src={profileInfo.profileImg} alt='' />
+			)}
 		</>
 	);
 };

@@ -38,7 +38,11 @@ const CreateProfile = () => {
 		<div>
 			<h2>User Name</h2>
 			<div>
-				<UploadPhoto profileInfo={profileInfo} setProfile={setprofileInfo} />
+				<UploadPhoto
+					profileInfo={profileInfo}
+					setProfile={setprofileInfo}
+					type={'user'}
+				/>
 			</div>
 			<form
 				onSubmit={handleSubmit((formData, e) =>
@@ -79,9 +83,9 @@ const onSubmit = async (
 	e.preventDefault();
 	const { userName, bio } = formData;
 	const profileImg = profileInfo.profileImg;
-
-	setFetchInfo({
-		url: URLS.PATCH + data.userId,
+	console.log(userName);
+	await setFetchInfo({
+		url: URLS.PATCH + data._id,
 		options: {
 			method: METHODS.PATCH,
 			body: JSON.stringify({

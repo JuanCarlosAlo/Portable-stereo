@@ -22,7 +22,7 @@ export const useFetch = initialFetch => {
 	});
 	// estado de las opciones y link del fetch
 	const [fetchInfo, setFetchInfo] = useState(initialFetch);
-	console.log(initialFetch, fetchStatus);
+	console.log(fetchInfo, fetchStatus);
 
 	useEffect(() => {
 		const controller = new AbortController();

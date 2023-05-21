@@ -1,4 +1,10 @@
-import { StyledCrossButton, StyledRegister } from './styles';
+import {
+	StyledCrossButton,
+	StyledErrorText,
+	StyledInput,
+	StyledInputContainer,
+	StyledRegister
+} from './styles';
 
 import MainColorButton from '../main-color-button/MainColorButton';
 
@@ -31,6 +37,7 @@ const Register = ({ setContent }) => {
 	const [usedEmail, setUsedEmail] = useState();
 
 	if (loading) return <h2>Loading</h2>;
+	if (error) return <h2>Something went wrong</h2>;
 
 	return (
 		<StyledRegister>
@@ -47,28 +54,30 @@ const Register = ({ setContent }) => {
 					onSubmit(formData, e, setUsedEmail, data, setFetchInfo, navigate)
 				)}
 			>
-				<div>
+				<StyledInputContainer>
 					<label htmlFor='email'>Email</label>
-					<input
+					<StyledInput
 						type='text'
 						name='email'
 						id='email'
 						{...register('email', FORM_VALIDATIONS.email)}
 					/>
-				</div>
+					<StyledErrorText>{errors?.email?.message}</StyledErrorText>
+				</StyledInputContainer>
 
-				<div>
+				<StyledInputContainer>
 					<label htmlFor='password'>Password</label>
-					<input
+					<StyledInput
 						type='paswword'
 						name='password'
 						id='password'
 						{...register('password', FORM_VALIDATIONS.password)}
 					/>
-				</div>
+					<StyledErrorText>{errors?.password?.message}</StyledErrorText>
+				</StyledInputContainer>
 
 				<MainColorButton text={'Next'} width={'250px'} type={'submit'} />
-				<p>{errors?.email?.message}</p>
+
 				{usedEmail && <p>{usedEmail}</p>}
 			</form>
 		</StyledRegister>
@@ -85,9 +94,8 @@ const onSubmit = async (
 ) => {
 	e.preventDefault();
 	const { email, password } = formData;
-
 	const emailUsed = data.find(user => user.email === formData.email);
-	console.log(data);
+
 	if (!emailUsed) {
 		try {
 			const userRegistered = await createUserWithEmailAndPassword(

@@ -7,13 +7,15 @@ import {
 	StyledButton,
 	StyledMainProfileContentContainer,
 	StyledProfile,
-	StyledProfileImage
+	StyledProfileHeader,
+	StyledProfileImage,
+	StyledUsername
 } from './styles';
 import Player from '../../components/player/Player';
 import { URLS } from '../../constants/urls';
 
-import HeaderLogin from '../../components/header-login/HeaderLogin';
 import { DataContext } from '../../context/Data.context';
+import SecondaryButton from '../../components/secondary-button/SecondaryButton';
 
 const Profile = () => {
 	const { currentUser, loadingFirebase } = useContext(AuthContext);
@@ -26,24 +28,29 @@ const Profile = () => {
 	}, [currentUser]);
 
 	const navigate = useNavigate();
-	if (loadingFirebase) return <h2>Loading</h2>;
-
-	if (loading) return <h2>Loading</h2>;
-
+	if (loadingFirebase || loading) return <h2>Loading</h2>;
+	if (typeof data !== 'object') return;
+	if (error) return <h2>Something went wrong</h2>;
 	return (
 		<>
 			<StyledProfile>
-				<HeaderLogin userData={data} />
-				<h2>Profile</h2>
+				<StyledProfileHeader>
+					<SecondaryButton
+						text={'BACK'}
+						buttonIcon={'/images/button-arrow.svg'}
+						url={'/'}
+					/>
+				</StyledProfileHeader>
+
 				<StyledMainProfileContentContainer>
 					<StyledProfileImage src={data.profileImg} alt='' />
 					<div>
-						<p>{data.userName}</p>
-						<p>Followers</p>
+						<StyledUsername>{data.userName}</StyledUsername>
+						<p>Followers: {data.likes.othersLikes}</p>
 					</div>
 				</StyledMainProfileContentContainer>
 				<div>
-					<p>{data.email}</p>
+					<p>Email {data.email}</p>
 					<p>Bio</p>
 					<p>{data.bio}</p>
 				</div>

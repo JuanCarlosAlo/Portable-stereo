@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { COLORS } from '../../constants/colors';
+import { HEADER_MEASUREMENTS } from '../../constants/headerMeasurements';
 
 const StyledHeader = styled.header`
 	display: flex;
@@ -7,7 +8,8 @@ const StyledHeader = styled.header`
 	align-items: center;
 	padding-left: 2rem;
 	padding-right: 2rem;
-	height: 60px;
+	height: ${HEADER_MEASUREMENTS.HEIGHT};
+	margin-bottom: ${HEADER_MEASUREMENTS.MARGIN_BOTTOM};
 `;
 
 const StyledHeaderLogo = styled.h1`

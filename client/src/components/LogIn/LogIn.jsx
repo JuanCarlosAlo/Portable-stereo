@@ -6,9 +6,11 @@ import { StyledCrossButton, StyledSignIn } from './styles';
 
 import MainColorButton from '../main-color-button/MainColorButton';
 import SocialLogin from '../social-logIn/SocialLogin';
-import InputContainer from '../inputContainer/InputContainer';
+
 import { useForm } from 'react-hook-form';
 import { FORM_VALIDATIONS } from '../../constants/inputValidation';
+import { useFetch } from '../../hooks/useFetch';
+import { URLS } from '../../constants/urls';
 
 const LogIn = ({ setContent }) => {
 	const {
@@ -16,7 +18,8 @@ const LogIn = ({ setContent }) => {
 		register,
 		formState: { errors }
 	} = useForm({ mode: 'onBlur' });
-
+	const { data, loading, error, setFetchInfo } = useFetch({ url: URLS.ALL });
+	if (loading || error) return;
 	return (
 		<StyledSignIn>
 			<StyledCrossButton
@@ -26,11 +29,11 @@ const LogIn = ({ setContent }) => {
 			/>
 			<h2>Log In</h2>
 
-			<SocialLogin social={'google'} />
-			<SocialLogin social={'twitter'} />
+			<SocialLogin />
+
 			<form
 				onSubmit={handleSubmit((formData, e) =>
-					onSubmit(formData, e, setContent)
+					onSubmit(formData, e, setContent, setFetchInfo, data)
 				)}
 			>
 				<div>
@@ -57,12 +60,13 @@ const LogIn = ({ setContent }) => {
 	);
 };
 
-const onSubmit = async (formData, e, setContent) => {
+const onSubmit = async (formData, e, setContent, setFetchInfo, data) => {
 	e.preventDefault();
 	const { email, password } = formData;
 
 	try {
 		await signInWithEmailAndPassword(auth, email, password);
+
 		setContent(null);
 	} catch (error) {}
 	// e.target.reset();
