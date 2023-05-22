@@ -110,20 +110,8 @@ const onSubmit = async (
 				password
 			);
 			const userName = 'UserName' + Date.now();
-			console.log(setFetchInfo);
-			await setFetchInfo({
-				url: URLS.POST,
-				options: {
-					method: METHODS.POST,
-					body: JSON.stringify({
-						_id: userRegistered.user.uid,
-						userName,
-						email: formData.email,
-						...FORM_DEFAULT_VALUES
-					}),
-					headers: HEADERS
-				}
-			});
+
+			await setFetchInfo({ url: URLS.ALL });
 
 			const userData = {
 				_id: userRegistered.user.uid,
@@ -131,7 +119,7 @@ const onSubmit = async (
 				email: formData.email,
 				...FORM_DEFAULT_VALUES
 			};
-
+			console.log({ url: URLS.ALL });
 			navigate('/create-profile', { state: userData });
 		} catch (err) {
 			setUsedEmail(err.code);

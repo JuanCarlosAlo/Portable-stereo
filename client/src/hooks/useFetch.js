@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
 const fetchData = async (fetchInfo, setFetchStatus, signal) => {
-	console.log(fetchInfo);
 	if (!fetchInfo) return;
+	console.log(fetchInfo);
 	const { url, options } = fetchInfo;
 
 	try {
@@ -15,13 +15,11 @@ const fetchData = async (fetchInfo, setFetchStatus, signal) => {
 };
 
 export const useFetch = initialFetch => {
-	// estado inicial del fetch
 	const [fetchStatus, setFetchStatus] = useState({
 		data: undefined,
 		loading: true,
 		error: undefined
 	});
-	// estado de las opciones y link del fetch
 	const [fetchInfo, setFetchInfo] = useState(initialFetch);
 
 	useEffect(() => {
