@@ -22,4 +22,21 @@ controller.getAllSongsWithUser = async (req, res) => {
   }
 };
 
+controller.createSong = async (req, res) => {
+  const { _id, title, author, cover, likes, soundFile } = req.body;
+
+  const newSong = new UserModel({
+    _id,
+    title,
+    author,
+    cover,
+    likes,
+    soundFile,
+  });
+  await newSong.save();
+  const currenSong = await UserModel.findById(req.body._id);
+  console.log(currenSong);
+  res.send(currenSong);
+};
+
 module.exports = controller;

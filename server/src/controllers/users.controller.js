@@ -59,8 +59,7 @@ controller.createUser = async (req, res) => {
     },
   });
 
-  await newUser.save();
-  const currentUser = await UserModel.findById(req.body._id);
+  const currentUser = await newUser.save();
   console.log(currentUser);
   res.send(currentUser);
 };

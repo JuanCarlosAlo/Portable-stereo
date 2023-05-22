@@ -14,13 +14,13 @@ import {
 import Player from '../../components/player/Player';
 import { URLS } from '../../constants/urls';
 
-import { DataContext } from '../../context/Data.context';
 import SecondaryButton from '../../components/secondary-button/SecondaryButton';
+import { useFetch } from '../../hooks/useFetch';
 
 const Profile = () => {
 	const { currentUser, loadingFirebase } = useContext(AuthContext);
 
-	const { setFetchInfo, data, loading, error } = useContext(DataContext);
+	const { data, loading, error, setFetchInfo } = useFetch();
 
 	useEffect(() => {
 		if (!currentUser) return;
@@ -29,7 +29,7 @@ const Profile = () => {
 
 	const navigate = useNavigate();
 	if (loadingFirebase || loading) return <h2>Loading</h2>;
-	if (typeof data !== 'object') return;
+
 	if (error) return <h2>Something went wrong</h2>;
 	return (
 		<>

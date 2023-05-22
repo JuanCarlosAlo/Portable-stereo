@@ -7,18 +7,18 @@ import UploadPhoto from '../../components/upload-photo/UploadPhoto';
 import MainColorButton from '../../components/main-color-button/MainColorButton';
 import { METHODS } from '../../constants/methods';
 import { HEADERS } from '../../constants/headers';
-import { useNavigate } from 'react-router-dom';
-import { DataContext } from '../../context/Data.context';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useFetch } from '../../hooks/useFetch';
 
 const CreateProfile = () => {
 	const { currentUser, loadingFirebase } = useContext(AuthContext);
-
-	const { setFetchInfo, data, loading, error } = useContext(DataContext);
-
-	useEffect(() => {
-		if (!currentUser) return;
-		setFetchInfo({ url: URLS.ALL + currentUser.uid });
-	}, [currentUser]);
+	const { state } = useLocation();
+	const {
+		data: userData,
+		loading,
+		error,
+		setFetchInfo
+	} = useFetch({ url: URLS.ALL + state._id });
 
 	const {
 		handleSubmit,
@@ -30,9 +30,9 @@ const CreateProfile = () => {
 		profileImg: IMAGES.DEFAULT_PROFILE
 	});
 	const navigate = useNavigate();
+	console.log(userData, state);
 	if (loadingFirebase || loading) return <h2>Loading</h2>;
 	if (error) return <h2>Error</h2>;
-	console.log(data);
 
 	return (
 		<div>
@@ -46,7 +46,7 @@ const CreateProfile = () => {
 			</div>
 			<form
 				onSubmit={handleSubmit((formData, e) =>
-					onSubmit(formData, e, data, setFetchInfo, profileInfo, navigate)
+					onSubmit(formData, e, userData, setFetchInfo, profileInfo, navigate)
 				)}
 			>
 				<div>
@@ -55,7 +55,7 @@ const CreateProfile = () => {
 						type='text'
 						name='userName'
 						id='userName'
-						placeholder={data.userName}
+						placeholder={userData.userName}
 						{...register('userName')}
 					/>
 				</div>
@@ -75,7 +75,7 @@ const CreateProfile = () => {
 const onSubmit = async (
 	formData,
 	e,
-	data,
+	userData,
 	setFetchInfo,
 	profileInfo,
 	navigate
@@ -85,7 +85,7 @@ const onSubmit = async (
 	const profileImg = profileInfo.profileImg;
 	console.log(userName);
 	await setFetchInfo({
-		url: URLS.PATCH + data._id,
+		url: URLS.PATCH + userData._id,
 		options: {
 			method: METHODS.PATCH,
 			body: JSON.stringify({

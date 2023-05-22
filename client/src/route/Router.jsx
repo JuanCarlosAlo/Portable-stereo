@@ -5,7 +5,7 @@ import Profile from '../pages/Profile/Profile';
 import ProtectedRoute from './ProtectedRoute';
 import Discover from '../pages/Discover/Discover';
 import AllowedRoute from './AllowedRoute';
-import CreateProfile from '../pages/createProfile/CreateProfile';
+import CreateProfile from '../pages/CreateProfile/CreateProfile';
 
 const Router = () => {
 	return (

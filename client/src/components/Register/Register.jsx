@@ -16,13 +16,14 @@ import {
 } from '../../constants/inputValidation';
 import { auth } from '../../config/firebase.config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useContext, useState } from 'react';
-import { DataContext } from '../../context/Data.context';
+import { useState } from 'react';
+
 import { URLS } from '../../constants/urls';
 import { METHODS } from '../../constants/methods';
 import { HEADERS } from '../../constants/headers';
 
 import { useNavigate } from 'react-router-dom';
+import { useFetch } from '../../hooks/useFetch';
 
 const Register = ({ setContent }) => {
 	const navigate = useNavigate();
@@ -32,7 +33,12 @@ const Register = ({ setContent }) => {
 		formState: { errors }
 	} = useForm({ mode: 'onBlur' });
 
-	const { data, loading, error, setFetchInfo } = useContext(DataContext);
+	const {
+		data: allUsers,
+		loading,
+		error,
+		setFetchInfo
+	} = useFetch({ url: URLS.ALL });
 
 	const [usedEmail, setUsedEmail] = useState();
 
@@ -47,13 +53,13 @@ const Register = ({ setContent }) => {
 				alt=''
 			/>
 			<h2>Register</h2>
-			<SocialLogin social={'google'} />
 
 			<form
 				onSubmit={handleSubmit((formData, e) =>
-					onSubmit(formData, e, setUsedEmail, data, setFetchInfo, navigate)
+					onSubmit(formData, e, setUsedEmail, allUsers, setFetchInfo, navigate)
 				)}
 			>
+				<SocialLogin setFetchInfo={setFetchInfo} />
 				<StyledInputContainer>
 					<label htmlFor='email'>Email</label>
 					<StyledInput
@@ -88,13 +94,13 @@ const onSubmit = async (
 	formData,
 	e,
 	setUsedEmail,
-	data,
+	allUsers,
 	setFetchInfo,
 	navigate
 ) => {
 	e.preventDefault();
 	const { email, password } = formData;
-	const emailUsed = data.find(user => user.email === formData.email);
+	const emailUsed = allUsers.find(user => user.email === formData.email);
 
 	if (!emailUsed) {
 		try {
@@ -104,6 +110,7 @@ const onSubmit = async (
 				password
 			);
 			const userName = 'UserName' + Date.now();
+			console.log(setFetchInfo);
 			await setFetchInfo({
 				url: URLS.POST,
 				options: {
@@ -117,7 +124,15 @@ const onSubmit = async (
 					headers: HEADERS
 				}
 			});
-			navigate('/create-profile');
+
+			const userData = {
+				_id: userRegistered.user.uid,
+				userName,
+				email: formData.email,
+				...FORM_DEFAULT_VALUES
+			};
+
+			navigate('/create-profile', { state: userData });
 		} catch (err) {
 			setUsedEmail(err.code);
 		}

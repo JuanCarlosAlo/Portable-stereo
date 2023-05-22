@@ -9,8 +9,6 @@ import SocialLogin from '../social-logIn/SocialLogin';
 
 import { useForm } from 'react-hook-form';
 import { FORM_VALIDATIONS } from '../../constants/inputValidation';
-import { useFetch } from '../../hooks/useFetch';
-import { URLS } from '../../constants/urls';
 
 const LogIn = ({ setContent }) => {
 	const {
@@ -18,8 +16,7 @@ const LogIn = ({ setContent }) => {
 		register,
 		formState: { errors }
 	} = useForm({ mode: 'onBlur' });
-	const { data, loading, error, setFetchInfo } = useFetch({ url: URLS.ALL });
-	if (loading || error) return;
+
 	return (
 		<StyledSignIn>
 			<StyledCrossButton
@@ -33,7 +30,7 @@ const LogIn = ({ setContent }) => {
 
 			<form
 				onSubmit={handleSubmit((formData, e) =>
-					onSubmit(formData, e, setContent, setFetchInfo, data)
+					onSubmit(formData, e, setContent)
 				)}
 			>
 				<div>
@@ -60,7 +57,7 @@ const LogIn = ({ setContent }) => {
 	);
 };
 
-const onSubmit = async (formData, e, setContent, setFetchInfo, data) => {
+const onSubmit = async (formData, e, setContent) => {
 	e.preventDefault();
 	const { email, password } = formData;
 
